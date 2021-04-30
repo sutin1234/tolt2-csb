@@ -11,7 +11,7 @@
 	<title>Home | RC Slab Design Online</title>
 </svelte:head>
 
-<section class="p-10 lg:p-60 xl:px-96 xl:pt-0 lg:pt-0 rounded-lg">
+<section class="p-10  rounded-lg">
 	<h2 class="text-center text-3xl">
 		<b class="text-red-500">Online Nonexpert Floor </b>
 		<p class="text-indigo-400 p-2">Construction System using Reinforced Concrete Slab</p>
