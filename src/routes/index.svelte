@@ -3,7 +3,8 @@
 </script>
 
 <script lang="ts">
-import LazyImage from '$lib/components/LazyImage.svelte'
+	import LazyImage from '$lib/components/LazyImage.svelte'
+	import { CONFIG } from '$lib/config'
 </script>
 
 <svelte:head>
@@ -28,7 +29,7 @@ import LazyImage from '$lib/components/LazyImage.svelte'
 						<LazyImage
 							alt="ecommerce"
 							className="w-full lg:w-3/6 max-h-60 object-cover object-center rounded"
-							src="/static/assets/images/One_Way_Slab.jpg"
+							src={ CONFIG.IMAGES +"/One_Way_Slab.jpg"}
 						/>
 						<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 							<div class="flex mb-4" />
@@ -50,7 +51,7 @@ import LazyImage from '$lib/components/LazyImage.svelte'
 						<LazyImage
 							alt="ecommerce"
 							className="w-full lg:w-3/6 max-h-60 object-cover object-center rounded"
-							src="/static/assets/images/Two_Way_Slab.jpg"
+							src={ CONFIG.IMAGES + "/Two_Way_Slab.jpg"}
 						/>
 						<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 							<div class="flex mb-4" />
