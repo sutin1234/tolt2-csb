@@ -10,7 +10,7 @@ import LazyImage from '$lib/components/LazyImage.svelte'
 	<title>Home | RC Slab Design Online</title>
 </svelte:head>
 
-<section class="p-4">
+<section class="p-4 lg:p-40 lg:pt-0">
 	<h2 class="text-center text-3xl">
 		<b class="text-red-500">Online Nonexpert Floor </b>
 		<p class="text-indigo-400 p-2">Construction System using Reinforced Concrete Slab</p>
@@ -28,7 +28,7 @@ import LazyImage from '$lib/components/LazyImage.svelte'
 						<LazyImage
 							alt="ecommerce"
 							className="w-full lg:w-3/6 max-h-60 object-cover object-center rounded"
-							src="https://tolt2.csb.app/images/One_Way_Slab.jpg"
+							src="/static/assets/images/One_Way_Slab.jpg"
 						/>
 						<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 							<div class="flex mb-4" />
@@ -50,7 +50,7 @@ import LazyImage from '$lib/components/LazyImage.svelte'
 						<LazyImage
 							alt="ecommerce"
 							className="w-full lg:w-3/6 max-h-60 object-cover object-center rounded"
-							src="https://tolt2.csb.app/images/Two_Way_Slab.jpg"
+							src="/static/assets/images/Two_Way_Slab.jpg"
 						/>
 						<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 							<div class="flex mb-4" />

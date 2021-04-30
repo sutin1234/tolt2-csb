@@ -3,8 +3,11 @@
 	import LazyImage from '$lib/components/LazyImage.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Button from '$lib/components/Button.svelte';
-
-	import type { DROPDOWN } from '$lib/models/index';
+	import { CONFIG } from '$lib/config/index'
+	import type { DROPDOWN, CALCULATE, IMAGEBOX } from '$lib/models/index';
+	import Icon from '$lib/components/Icon.svelte'
+	import SummaryBox from '$lib/components/SummaryBox.svelte'
+	import ImageBox from '$lib/components/ImageBox.svelte'
 
 	const barTypeList: DROPDOWN[] = [
 		{ label: 'RB (Round Bar)', value: 'RB' },
@@ -26,51 +29,61 @@
 		{ label: '25 mm.', value: '25' }
 	];
 
+	const dataImageBox: IMAGEBOX[] = [
+		{ 
+			topic: 'Short Span Reinforcement :', 
+			image: CONFIG.IMAGES + "/bar_short.jpg", 
+			contents: [
+				'a = spacial reinforced use rebar size DB12 mm.@ 40',
+				'b = main reinforced in short side use rebar size DB12 mm.@ 20 cm.', 
+				'c = main reinforced in long side use rebar size DB12 mm.@ 20 cm.'
+			]
+		},
+		{ 
+			topic: 'Long Span Reinforcement :', 
+			image: CONFIG.IMAGES + "/bar_long.jpg", 
+			contents: [
+				'd = spacial reinforced use rebar size DB12 mm.@ 40 cm.',
+				'e = main reinforced in long side use rebar size DB12 mm.@ 20 cm.',
+				'f = main reinforced in short side use rebar size DB12 mm.@ 20 cm.'
+			]
+		},
+	]
+
 	let barSize = 'RB';
-	let steel = '';
+	let steel: string = '';
 	let showSummary = false;
 	let slapTypeS: number = 0;
 	let slapTypeL: number = 0;
-	let slapType = '';
+	let slapType: string = '';
 	let inputBarSelected: number = 0;
-	let totalSummaryResult = 0;
+	let totalSummaryResult: number = 0;
 
-	$: steelList2 = strealList.filter((f) => {
-		if (barSize == 'RB') {
-			return f.value == 'RS24';
-		}
+	$: steelList2 = strealList.filter(f => {
+		if (barSize == 'RB') return f.value == 'RS24';
 		return f.value != 'RS24';
 	});
 
 	$: formValid = (slapTypeL && slapTypeS) ? true : false;
 
-	const calculate = () => {
+	const calculate = (data: CALCULATE) => {
 		// 1. (S+L)*100/90
-		const summary: number = (slapTypeS + slapTypeL) * (100 / 90);
-		const summary2: number = summary + parseInt(inputBarSelected);
+		const summary: number = (data.slapTypeS + data.slapTypeL) * (100 / 90);
+		const summary2: number = summary + parseInt(data.inputBarSelected);
 		totalSummaryResult = parseFloat(summary2).toFixed(2) || 0;
 	};
 
-	$: calculate();
+	$: calculate({ slapTypeL, slapTypeS, inputBarSelected});
 
-	const barHandleSelect = ({ detail }) => {
-		barSize = detail;
-	};
-	const handleSteelSelect = ({ detail }) => {
-		steel = detail;
-	};
-	const InputBarHandleSelect = ({ detail }) => {
-		inputBarSelected = parseInt(detail);
-		calculate();
-	};
-	const summaryResult = () => {
-		showSummary = true;
-	};
-	const slapTypeChange = ({ detail }, type) => {
+	const barHandleSelect = ({ detail }) => barSize = detail;
+	const handleSteelSelect = ({ detail }) => steel = detail;
+	const InputBarHandleSelect = ({ detail }) => inputBarSelected = parseInt(detail);
+	const summaryResult = () => showSummary = true;
+
+	const slapTypeChange = ({ detail }, type: string) => {
 		slapType = type;
 		if (type == 'S') slapTypeS = parseInt(detail);
 		if (type == 'L') slapTypeL = parseInt(detail);
-		calculate();
 	};
 </script>
 
@@ -78,8 +91,8 @@
 	<title>Design Page | RC Slab Design Online</title>
 </svelte:head>
 
-<section class="p-10 lg:p-60 xl:p-96 xl:pt-0 lg:pt-0">
-	<h2 class="text-center text-3xl">
+<section class="p-10 lg:p-60 xl:px-96 xl:pt-0 lg:pt-0 rounded-lg">
+	<h2 class="text-center text-3xl py-9">
 		<b class="text-red-500">Online Nonexpert Floor </b>
 		<p class="text-indigo-400 p-2">Construction System using Reinforced Concrete Slab</p>
 	</h2>
@@ -91,7 +104,7 @@
 					<LazyImage
 						alt="content"
 						className="object-cover object-center"
-						src="https://tolt2.csb.app/images/slab01.jpg"
+						src={CONFIG.IMAGES + "/slab01.jpg"}
 					/>
 				</div>
 			</div>
@@ -124,13 +137,13 @@
 				<LazyImage
 					alt="content"
 					className="object-cover object-cente mr-4 mb-4"
-					src="https://tolt2.csb.app/images/round_bar.jpg"
+					src={CONFIG.IMAGES + "/round_bar.jpg"}
 				/>
 
 				<LazyImage
 					alt="content"
 					className="object-cover object-cente ml-4 mt-4"
-					src="https://tolt2.csb.app/images/deformed_bar.jpg"
+					src={CONFIG.IMAGES + "/deformed_bar.jpg"}
 				/>
 			</div>
 			<p class="font-bold text-blue-600">
@@ -146,21 +159,18 @@
 				</div>
 				<Dropdown lists={inputBarList} on:selected={InputBarHandleSelect} />
 			</div>
-			<div class=" mr-2 mt-2 md:inline-block">
-				<Button type="primary" on:click={summaryResult}>Design</Button>
+			<div class=" mt-2 md:inline-block">
+				<Button type="primary" on:click={summaryResult} isIcon={true}>
+					<Icon name="pencil" class="mr-2"/> Design
+				</Button>
 			</div>
 
 			{#if showSummary && formValid}
-				<div class="bg-blue-50 rounded text-blue-600 shadow-lg mt-4 p-4">
-					<p class="font-bold text-blue-600">Summary Result: {totalSummaryResult} mm.</p>
-					<div>
-						<div>Design Result Type of slab: ONE WAY SLAB</div>
-						<div>Short span lenght (S) : {slapTypeS} m.</div>
-						<div>Long span lenght (L): {slapTypeL} m.</div>
-						<div>Slab thickness (t) : {inputBarSelected} cm. Short Span Reinforcement</div>
-					</div>
-				</div>
+				<SummaryBox data={{ totalSummaryResult, slapTypeS, slapTypeL, inputBarSelected}} />
 			{/if}
+
+			<ImageBox data={dataImageBox} />
+
 		</div>
 	</div>
 </section>
