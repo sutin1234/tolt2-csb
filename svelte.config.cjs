@@ -1,11 +1,8 @@
 const preprocess = require('svelte-preprocess');
 const vercel = require('@sveltejs/adapter-vercel');
+const static = require('@sveltejs/adapter-static');
 
-
-/** @type {import('@sveltejs/kit').Config} */
 module.exports = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
 	preprocess: [
 		preprocess({
 			postcss: true
@@ -13,7 +10,7 @@ module.exports = {
 	],
 
 	kit: {
-		adapter: vercel(),
+		adapter: static(),
 		target: '#svelte'
 	}
 };

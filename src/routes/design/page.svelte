@@ -29,34 +29,13 @@
 		{ label: '25 mm.', value: '25' }
 	];
 
-	const dataImageBox: IMAGEBOX[] = [
-		{ 
-			topic: 'Short Span Reinforcement :', 
-			image: CONFIG.IMAGES + "/bar_short.jpg", 
-			contents: [
-				'a = spacial reinforced use rebar size DB12 mm.@ 40',
-				'b = main reinforced in short side use rebar size DB12 mm.@ 20 cm.', 
-				'c = main reinforced in long side use rebar size DB12 mm.@ 20 cm.'
-			]
-		},
-		{ 
-			topic: 'Long Span Reinforcement :', 
-			image: CONFIG.IMAGES + "/bar_long.jpg", 
-			contents: [
-				'd = spacial reinforced use rebar size DB12 mm.@ 40 cm.',
-				'e = main reinforced in long side use rebar size DB12 mm.@ 20 cm.',
-				'f = main reinforced in short side use rebar size DB12 mm.@ 20 cm.'
-			]
-		},
-	]
-
 	let barSize = 'RB';
 	let steel: string = '';
 	let showSummary = false;
-	let slapTypeS: number = 0;
-	let slapTypeL: number = 0;
+	let slapTypeS: number = 0; // S
+	let slapTypeL: number = 0; // L
 	let slapType: string = '';
-	let inputBarSelected: number = 0;
+	let inputBarSelected: number = 0; // T
 	let totalSummaryResult: number = 0;
 
 	$: steelList2 = strealList.filter(f => {
@@ -66,14 +45,49 @@
 
 	$: formValid = (slapTypeL && slapTypeS) ? true : false;
 
-	const calculate = (data: CALCULATE) => {
+	function calculate(data: CALCULATE) {
 		// 1. (S+L)*100/90
 		const summary: number = (data.slapTypeS + data.slapTypeL) * (100 / 90);
 		const summary2: number = summary + parseInt(data.inputBarSelected);
 		totalSummaryResult = parseFloat(summary2).toFixed(2) || 0;
 	};
 
+	function calculateResizeBar(barSize, inputBarSelected) {
+		return barSize + '' +  inputBarSelected
+	}
+
+	function calculateAddS(slapTypeS){
+		return slapTypeS*2
+	}
+	function calculateAddL(slapTypeL){
+		return slapTypeL*2
+	}
+
 	$: calculate({ slapTypeL, slapTypeS, inputBarSelected});
+	$: rebarSize = calculateResizeBar(barSize, inputBarSelected)
+	$: addS = calculateAddS(slapTypeS)
+	$: addL = calculateAddL(slapTypeL)
+
+	$: dataImageBox = [
+		{ 
+			topic: 'Short Span Reinforcement :', 
+			image: CONFIG.IMAGES + "/bar_short.jpg", 
+			contents: [
+				`a = spacial reinforced use rebar size ${rebarSize} mm.@ ${addS} cm`,
+				`b = main reinforced in short side use rebar size  ${rebarSize} mm.@ ${addS} cm.`, 
+				`c = main reinforced in long side use rebar size  ${rebarSize} mm.@ ${addL} cm.`
+			]
+		},
+		{ 
+			topic: 'Long Span Reinforcement :', 
+			image: CONFIG.IMAGES + "/bar_long.jpg", 
+			contents: [
+				`d = spacial reinforced use rebar size ${rebarSize} mm.@ ${addL} cm.`,
+				`e = main reinforced in long side use rebar ${rebarSize} mm.@ ${addL} cm.`,
+				`f = main reinforced in short side use rebar size ${rebarSize} mm.@ ${addS} cm.`
+			]
+		},
+	]
 
 	const barHandleSelect = ({ detail }) => barSize = detail;
 	const handleSteelSelect = ({ detail }) => steel = detail;

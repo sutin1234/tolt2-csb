@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { IMAGEBOX } from '$lib/models';
-	import { CONFIG } from '$lib/config';
 	import LazyImage from '$lib/components/LazyImage.svelte';
 
 	export let data: IMAGEBOX[];
